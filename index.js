@@ -13,10 +13,35 @@ app.get('/endpoint', (req, res) => {
 
 app.get('/products', (req, res) => {
   // Responder en formato JSON
-  res.json({
-    name: 'Product 1',
-    price: 100,
-  });
+  res.json([
+    {
+      name: 'Product 1',
+      price: 100,
+    },
+    {
+      name: 'Product 2',
+      price: 200,
+    }
+  ]);
+});
+
+app.get('/products/:productId', (req, res) => {
+  const { productId } = req.params;
+  res.json(
+    {
+      productId,
+    }
+  );
+});
+
+app.get('/categories/:categoryId/products/:productId', (req, res) => {
+  const { categoryId, productId } = req.params;
+  res.json(
+    {
+      categoryId,
+      productId,
+    }
+  );
 });
 
 app.listen(port, () => {
