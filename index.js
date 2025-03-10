@@ -1,4 +1,5 @@
 import express from 'express';
+import { faker } from '@faker-js/faker';
 
 const app = express();
 const port = 3000;
@@ -12,17 +13,26 @@ app.get('/endpoint', (req, res) => {
 });
 
 app.get('/products', (req, res) => {
-  // Responder en formato JSON
-  res.json([
-    {
-      name: 'Product 1',
-      price: 100,
-    },
-    {
-      name: 'Product 2',
-      price: 200,
-    }
-  ]);
+  const products = [];
+  const { size } = req.query;
+  const limit = size || 10;
+
+  for (let i = 0; i < limit; i++) {
+    products.push(
+      {
+        name: faker.commerce.productName(),
+        price: faker.commerce.price(),
+        image: faker.image.url(),
+      }
+    );
+  }
+
+  res.json(products);
+});
+
+
+app.get('/products/filter', (req, res) => {
+  res.send('Filter!');
 });
 
 app.get('/products/:productId', (req, res) => {
@@ -32,6 +42,20 @@ app.get('/products/:productId', (req, res) => {
       productId,
     }
   );
+});
+
+app.get('/users', (req, res) => {
+  const { limit, offset } = req.query;
+  if (limit && offset) {
+    res.json(
+      {
+        limit,
+        offset,
+      }
+    );
+  } else {
+    res.send('No parameters');
+  }
 });
 
 app.get('/categories/:categoryId/products/:productId', (req, res) => {
