@@ -38,5 +38,14 @@ router.get('/:productId', (req, res) => {
   );
 });
 
+router.post('/', (req, res) => {
+  const body = req.body;
+
+  res.json({
+    message: 'Created',
+    data: body,
+  });
+});
+
 // Exportamos el router
 export default router;
