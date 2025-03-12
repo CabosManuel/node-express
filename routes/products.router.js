@@ -31,17 +31,26 @@ router.get('/filter', (req, res) => {
 
 router.get('/:productId', (req, res) => {
   const { productId } = req.params;
-  res.json(
-    {
-      productId,
-    }
-  );
+
+  if (productId === '999') {
+    res.status(404).json({
+      message: 'Not found',
+    });
+  } else {
+    res.json(
+      {
+        productId,
+        name: "Product",
+        price: 1234,
+      }
+    );
+  }
 });
 
 router.post('/', (req, res) => {
   const body = req.body;
 
-  res.json({
+  res.status(201).json({
     message: 'Created',
     data: body,
   });
