@@ -40,6 +40,7 @@ export default class ProductsService {
   }
 
   async findOne(productId) {
+    // const total = this.getTotal(); // Forzar error llamando a una función que no existe
     const product = this.products.find(p => p.id === productId);
     if (!product) {
       throw new Error('Product not found');

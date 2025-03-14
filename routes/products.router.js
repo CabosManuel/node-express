@@ -17,10 +17,14 @@ router.get('/filter', (req, res) => {
   res.send('Filter!');
 });
 
-router.get('/:productId', async (req, res) => {
-  const { productId } = req.params;
-  const product = await service.findOne(productId);
-  return res.json(product);
+router.get('/:productId', async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const product = await service.findOne(productId);
+    return res.json(product);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/', async (req, res) => {
