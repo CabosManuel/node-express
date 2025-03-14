@@ -48,7 +48,7 @@ export default class ProductsService {
   }
 
   async update(productId, changes) {
-    const product = this.findOne(productId);
+    const product = await this.findOne(productId);
     const index = this.products.findIndex(p => p.id === product.id);
 
     this.products[index] = {
@@ -59,7 +59,7 @@ export default class ProductsService {
   }
 
   async delete(productId) {
-    const product = this.findOne(productId);
+    const product = await this.findOne(productId);
     const index = this.products.findIndex(p => p.id === product.id);
 
     this.products.splice(index, 1);

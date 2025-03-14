@@ -34,14 +34,20 @@ router.post('/', async (req, res) => {
 });
 
 router.patch('/:id', async (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
+  try {
+    const { id } = req.params;
+    const body = req.body;
 
-  const product = await service.update(id, body);
-  res.json({
-    message: 'Updated',
-    data: product,
-  });
+    const product = await service.update(id, body);
+    res.json({
+      message: 'Updated',
+      data: product,
+    });
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    })
+  }
 });
 
 router.delete('/:productId', (req, res) => {
