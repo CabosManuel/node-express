@@ -7,8 +7,8 @@ const service = new ProductsService(); // Servicio de productos
 
 // Endpoints que van despues de /products:
 
-router.get('/', (req, res) => {
-  const products = service.getAll();
+router.get('/', async (req, res) => {
+  const products = await service.getAll();
   res.json(products);
 });
 
@@ -17,27 +17,27 @@ router.get('/filter', (req, res) => {
   res.send('Filter!');
 });
 
-router.get('/:productId', (req, res) => {
+router.get('/:productId', async (req, res) => {
   const { productId } = req.params;
-  const product = service.findOne(productId);
+  const product = await service.findOne(productId);
   return res.json(product);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body;
 
-  const product = service.create(body);
+  const product = await service.create(body);
   res.status(201).json({
     message: 'Created',
     data: product,
   });
 });
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
   const { id } = req.params;
   const body = req.body;
 
-  const product = service.update(id, body);
+  const product = await service.update(id, body);
   res.json({
     message: 'Updated',
     data: product,
