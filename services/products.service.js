@@ -1,0 +1,64 @@
+import { faker } from '@faker-js/faker';
+
+export default class ProductsService {
+  constructor () {
+    this.products = []; // Array de productos
+    this.generate(); // Generar productos
+  }
+
+  // Funcion para generar productos
+  generate() {
+    const limit = 3;
+    for (let i = 0; i < limit; i++) {
+      this.products.push(
+        {
+          id: faker.string.uuid(),
+          name: faker.commerce.productName(),
+          price: faker.commerce.price(),
+          image: faker.image.url(),
+        }
+      );
+    }
+  }
+
+  create(body) {
+    const newProduct = {
+      id: faker.string.uuid(),
+      ...body,
+    };
+
+    this.products.push(newProduct);
+    return newProduct;
+  }
+
+  getAll() {
+    return this.products;
+  }
+
+  findOne(productId) {
+    const product = this.products.find(p => p.id === productId);
+    if (!product) {
+      throw new Error('Product not found');
+    }
+    return product;
+  }
+
+  update(productId, changes) {
+    const product = this.findOne(productId);
+    const index = this.products.findIndex(p => p.id === product.id);
+
+    this.products[index] = {
+      ...product,
+      ...changes,
+    };
+    return this.products[index];
+  }
+
+  delete(productId) {
+    const product = this.findOne(productId);
+    const index = this.products.findIndex(p => p.id === product.id);
+
+    this.products.splice(index, 1);
+    return product.id;
+  }
+}

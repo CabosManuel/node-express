@@ -1,26 +1,14 @@
 import express from 'express';
-import { faker } from '@faker-js/faker';
+import ProductsService from '../services/products.service.js';
 
 // Router especifico para productos
 const router = express.Router();
+const service = new ProductsService(); // Servicio de productos
 
 // Endpoints que van despues de /products:
 
 router.get('/', (req, res) => {
-  const products = [];
-  const { size } = req.query;
-  const limit = size || 10;
-
-  for (let i = 0; i < limit; i++) {
-    products.push(
-      {
-        name: faker.commerce.productName(),
-        price: faker.commerce.price(),
-        image: faker.image.url(),
-      }
-    );
-  }
-
+  const products = service.getAll();
   res.json(products);
 });
 
@@ -31,39 +19,17 @@ router.get('/filter', (req, res) => {
 
 router.get('/:productId', (req, res) => {
   const { productId } = req.params;
-
-  if (productId === '999') {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  } else {
-    res.json(
-      {
-        productId,
-        name: "Product",
-        price: 1234,
-      }
-    );
-  }
+  const product = service.findOne(productId);
+  return res.json(product);
 });
 
 router.post('/', (req, res) => {
   const body = req.body;
 
+  const product = service.create(body);
   res.status(201).json({
     message: 'Created',
-    data: body,
-  });
-});
-
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-
-  res.json({
-    message: 'Updated partial',
-    id,
-    data: body,
+    data: product,
   });
 });
 
@@ -71,19 +37,19 @@ router.patch('/:id', (req, res) => {
   const { id } = req.params;
   const body = req.body;
 
+  const product = service.update(id, body);
   res.json({
-    message: 'Updated partial',
-    id,
-    data: body,
+    message: 'Updated',
+    data: product,
   });
 });
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-
+router.delete('/:productId', (req, res) => {
+  const { productId } = req.params;
+  const productDeletedId = service.delete(productId);
   res.json({
     message: 'Deleted',
-    id,
+    productDeletedId,
   });
 });
 
