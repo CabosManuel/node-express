@@ -1,6 +1,6 @@
 import express from 'express';
 import routerApi from "./routes/index.js";
-import { logErrors, errorHandler } from "./middlewares/error.handler.js"
+import { logErrors, errorHandler, boomErrorHandler } from "./middlewares/error.handler.js"
 
 const app = express();
 const port = 3000;
@@ -20,7 +20,8 @@ app.get('/endpoint', (req, res) => {
 routerApi(app);
 
 app.use(logErrors); // Primero middleware que si utiliza "next()"
-app.use(errorHandler); // Segundo middleware que envía una respuesta
+app.use(boomErrorHandler);
+app.use(errorHandler); // Al final middleware que envía una respuesta
 
 app.listen(port, () => {
   console.log('Port: ', port);

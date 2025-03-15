@@ -13,3 +13,13 @@ export function errorHandler (error, req, res, next) {
     stack: error.stack,
   });
 }
+
+// Middleware para capturar errores generados por la librería @hapi/boom
+export function boomErrorHandler(error, req, res, next) {
+  if (!error.isBoom) { // Si no es boom pasar al sig. middleware
+    next(error);
+  } else { // Error isBoom
+    const { output } = error;
+    res.status(output.statusCode).json(output.payload);
+  }
+}

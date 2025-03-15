@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import boom from '@hapi/boom';
 
 export default class ProductsService {
   constructor () {
@@ -43,7 +44,7 @@ export default class ProductsService {
     // const total = this.getTotal(); // Forzar error llamando a una función que no existe
     const product = this.products.find(p => p.id === productId);
     if (!product) {
-      throw new Error('Product not found');
+      throw boom.notFound('Product not found'); // Error de tipo boom
     }
     return product;
   }
