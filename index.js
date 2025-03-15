@@ -20,7 +20,7 @@ app.get('/endpoint', (req, res) => {
 routerApi(app);
 
 app.use(logErrors); // Primero middleware que si utiliza "next()"
-app.use(boomErrorHandler);
+app.use(boomErrorHandler); // Middleware para errores de tipo boom
 app.use(errorHandler); // Al final middleware que envía una respuesta
 
 app.listen(port, () => {

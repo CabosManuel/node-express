@@ -17,6 +17,7 @@ export default class ProductsService {
           name: faker.commerce.productName(),
           price: faker.commerce.price(),
           image: faker.image.url(),
+          isBlock: faker.datatype.boolean(),
         }
       );
     }
@@ -45,6 +46,9 @@ export default class ProductsService {
     const product = this.products.find(p => p.id === productId);
     if (!product) {
       throw boom.notFound('Product not found'); // Error de tipo boom
+    }
+    if (product.isBlock) { // Cuando sea un producto bloqueado
+      throw boom.conflict('Product is blocked'); // (409) Error por lógica de negocio
     }
     return product;
   }
