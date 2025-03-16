@@ -1,5 +1,7 @@
 import express from 'express';
 import ProductsService from '../services/products.service.js';
+import { validatorHandler } from '../middlewares/validator.handler.js';
+import { createProductSchema, updateProductSchema, getProductSchema } from '../schemas/product.schema.js';
 
 // Router especifico para productos
 const router = express.Router();
@@ -17,7 +19,11 @@ router.get('/filter', (req, res) => {
   res.send('Filter!');
 });
 
-router.get('/:productId', async (req, res, next) => {
+router.get('/:productId',
+  // 1. Pasa el schema y parámetros al middleware de validación
+  validatorHandler(getProductSchema, 'params'),
+  // 2. Ejecutar la función
+  async (req, res, next) => {
   try {
     const { productId } = req.params;
     const product = await service.findOne(productId);
@@ -27,7 +33,11 @@ router.get('/:productId', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/',
+  // 1. Pasar el schema y el body al middleware de validación
+  validatorHandler(createProductSchema, 'body'),
+  // 2. Ejecutar la función
+  async (req, res) => {
   const body = req.body;
 
   const product = await service.create(body);
@@ -37,7 +47,11 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id',
+  // Utilizamos 2 middlewares, uno para los parámetros y otro para el body
+  validatorHandler(getProductSchema, 'params'),
+  validatorHandler(updateProductSchema, 'body'),
+  async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
